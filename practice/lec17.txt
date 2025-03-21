@@ -1,0 +1,26 @@
+monoid
+= a monoid is a mathematical structure consist of
+1. set of element (carrier set)
+2. identity element
+3. binary op
+4. some propoties
+
+semigroup
+= has 3 4 no 2
+a semigroup has only an infix function (<>)
+that combines two values
+
+law 1: identity
+x <> mempty = x (right identity)
+mempty <> x = x (left identity)
+
+law 2: associativity
+x <> (y <> z) = (x <> y) <> z
+
+type isomorphism
+= one-to-one mathematic sets
+we can make diffent view of the same type
+using newtype
+
+newtype
+= keyword warp a type (use record)

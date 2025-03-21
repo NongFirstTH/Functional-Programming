@@ -1,0 +1,4 @@
+stateful computation
+= input state s , output of type a is the result, output state s
+ s -> (a, s)
+= introduce abstraction to our computation

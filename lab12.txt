@@ -1,0 +1,27 @@
+1.how should we define equality for binary trees?
+    define Tree a = Empty | Node (Tree a) a (Tree a) 
+1.1when are two binary trees equal?
+    เท่ากันโดยดูสมาชิกแต่ละตัวโดย
+    case1: Empty เทียบกับ Empty
+    otherwise: เทียบ root ว่าเท่ากันมั้ย และ เทียบ Tree ทางซ้ายว่าเท่ากันมั้ย และ เทียบ Tree ทางขวาว่าเท่ากันมั้ย
+    ถ้าเท่ากันทั้งหมดแสดงว่า binary tree 2 ต้นจะเท่ากัน
+
+2.how should we define equality for lists?
+    data list a = [] | a:[a]
+2.1when are two lists equal?
+    case1: [] เทียบกัน
+    otherwise: เอาสมาชิกดึงมาเทียบแต่ละตัวเทียบกัน
+    ถ้าเท่ากันทั้งหมดแสดงว่า list 2 อันเท่ากัน
+
+3.how should we define equality for pairs?
+    data pair a,b = (a,b)
+3.1when are two pairs equal?
+    เอา pair สมาชิกตัวแรกเทียบกัน และ pair สมาชิกตัวหลังเทียบกัน
+    ถ้าเท่ากันทั้งหมดแสดงว่า pair 2 อันเท่ากัน
+
+4.how should we define equality for Maybe?
+    data Maybe a = maybe a
+4.1when are two Maybe's equal?
+    case1: Nothing เที่ยบกับ Nothing 
+    case2: Just เทียบกับ Just 
+    ถ้าเทียบแล้วเหมือนกันแสดงว่า maybe 2 อันเท่ากัน

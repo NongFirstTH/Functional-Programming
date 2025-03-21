@@ -1,0 +1,6 @@
+typeclasses
+- similar with interfaces
+- need to implement to be a member of the typeclass
+
+deriving keyword
+- tell haskell to genetate a typeclass instance in a natural way

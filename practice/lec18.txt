@@ -1,0 +1,22 @@
+Xbind :: X a -> (a -> X b) -> X b
+X = unary type constructor
+
+Monad
+= abstract data types of actions
+
+monadic fuction
+a -> mb
+= receieve type a 
+return a computation type b
+
+compose monadic fuctions
+(>=>) :: (a -> m b) -> (b -> m c) -> (a -> m c)
+h (>=>) k = \x -> join $ fmap k (h x)
+
+law 1: return a >>= k = k a (left identity)
+
+*for Maybe
+(Just x) >>= k = k x
+Nothing >>= _ = Nothing
+
+return a >>= k

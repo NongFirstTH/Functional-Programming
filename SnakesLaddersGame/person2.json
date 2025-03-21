@@ -1,0 +1,11 @@
+{
+    "address": {
+        "city": "New York",
+        "house": 285,
+        "state": "New York",
+        "street": "7th Ave.",
+        "zip": 10001
+    },
+    "age": 23,
+    "name": "some body"
+}

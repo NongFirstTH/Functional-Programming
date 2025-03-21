@@ -1,0 +1,5 @@
+records
+- specify field name along with data type
+ex. data Type = Cnstr {x :: Int, flag :: Bool}
+- field name can be used as functions to project part of record
+ex. flag (Cnstr 45 True) -> true

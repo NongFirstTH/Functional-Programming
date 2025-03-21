@@ -1,0 +1,52 @@
+type constructor
+- function that takes a type as an argument
+returns a type as a result
+
+Xmap :: (a -> b) -> X a -> X b
+a, b = type variables that refer to types
+X = type constructor variable
+
+functor
+- functor is a mathematical structure
+
+fmap :: (a -> b) -> f a -> f b
+- take tranformar function and 
+box that values inside the box has type a
+and produces a box that has values type b
+
+fmap :: (a -> b) -> (f a -> f b)
+- take tranformar function and 
+produces another function 
+that tranforms values in side box f
+
+functor law 1: 
+    fmap :: a -> a -> fa -> fa
+    fmap id = id
+id :: a -> a
+id :: fa -> fa
+
+*for Maybe
+fmap id Nothing = Nothing
+fmap id (Just x) = Just (id x) = Just x
+
+*for List
+fmap id l = map id l = l = id l
+
+functor law 2:
+    fmap :: (a -> c) -> f a -> f c
+    fmap (h . g) = fmap h . fmap g
+g :: a -> b         fmap g :: f a -> f b
+h :: b -> c         fmap h :: f b -> f c
+h . g :: a -> c     fmap (h . g), fmap h . fmap g :: f a -> f c
+
+*for Maybe
+fmap (h . g) Nothing = Nothing
+fmap (h . g) (Just x) = Just ((h . g) x) 
+= fmap h . fmap g $ Just x
+= fmap h (fmap g (Just x))
+= fmap h (Just (g x))
+= Just (h (g x))
+= Just ((h . g) x)
+
+kind
+- type of type constructor
