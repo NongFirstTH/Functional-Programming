@@ -1,19 +1,22 @@
 module SnakesAndLadders where
 
 import Data.Map (Map, lookup, fromList)
-import Control.Monad.State (StateT, lift, runStateT, state, get, put)
-import System.Random (StdGen, RandomGen, UniformRange, uniformR, newStdGen)
+import Control.Monad.State (StateT, lift, runStateT, get, put)
+import System.Random (StdGen, uniformR, newStdGen)
 import Text.Read (readEither)
+import GHC.Generics (Generic)
+import Data.Aeson (FromJSON, ToJSON, decode)
+import Data.Aeson.Encode.Pretty
+import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString.Lazy.Char8 as C
 -- import Queue
 
-data Queue a = Queue [a] [a]
-    deriving (Show)
+data Queue a = Queue { front :: [a], back :: [a] }
+    deriving (Show, Generic)
 
--- Create a new queue.
 newQueue :: Queue a
 newQueue = Queue [] []
 
--- Test whether a queue is empty.
 empty :: Queue a -> Bool
 empty (Queue [] []) = True
 empty _             = False
@@ -28,20 +31,12 @@ tailQ (Queue [] []) = error "Can't find top of an empty queue"
 tailQ (Queue _ (y:_)) = y
 tailQ (Queue xs []) = tailQ (Queue [] (reverse xs))
 
--- Add an item to the back of the queue, returning the updated queue.
 enq :: Queue a -> a -> Queue a
 enq (Queue xs ys) y = Queue xs (y:ys)
 
--- Remove an item from the front of the queue, returning the item and the updated queue.
 deq :: Queue a -> (a, Queue a)
-
--- If the queue is empty, raise an error.
 deq (Queue [] []) = error "Can't deq from an empty queue"
-
--- If there's at least one item in the front part of the queue, return it.
 deq (Queue (x:xs) ys) = (x, Queue xs ys)
-
--- If the front part is empty, reverse the back part, move it to the front, and try again.
 deq (Queue [] ys) = deq (Queue (reverse ys) [])
 
 type Id = Int
@@ -50,26 +45,45 @@ type Head = Position
 type Tail = Position
 type Top = Position
 type Bottom = Position
+type Turn = Int
 
 data Player = Player {
     pid :: Id,
     position :: Position,
     name :: String
-}
+} deriving (Show, Generic)
 
-data PlayerOrder = PlayerOrder {players :: Queue Player}
+data PlayerOrder = PlayerOrder {players :: Queue Player} deriving (Show, Generic)
 
 data Board = Board {
     size :: Int,
     snakes :: Map Head Tail,
     ladders :: Map Bottom Top
-}
+} deriving (Show, Generic)
 
 data Dice = Dice {
     numberOfFaces :: Int
-}
+} deriving (Show, Generic)
 
-type GameState = (PlayerOrder, Board, Dice)
+data GameState = GameState {
+    turn :: Turn,
+    playerOrder :: PlayerOrder,
+    board :: Board,
+    dice :: Dice
+} deriving (Show, Generic)
+
+instance FromJSON Player
+instance ToJSON Player
+instance FromJSON (Queue Player)
+instance ToJSON (Queue Player)
+instance FromJSON PlayerOrder
+instance ToJSON PlayerOrder
+instance FromJSON Board
+instance ToJSON Board
+instance FromJSON Dice
+instance ToJSON Dice
+instance FromJSON GameState
+instance ToJSON GameState
 
 snakeMap :: Map Head Tail
 snakeMap = fromList [(20, 5), (21, 10), (22, 15)]
@@ -77,49 +91,67 @@ snakeMap = fromList [(20, 5), (21, 10), (22, 15)]
 ladderMap :: Map Bottom Top
 ladderMap = fromList [(2, 5), (7, 10), (9, 15)]
 
-main :: IO GameState
-main = v1 setupGame
-
-v1 :: IO GameState -> IO GameState
-v1 setupGame' = do
-    s <- setupGame'
+main :: IO GameState -> (GameState -> IO ()) -> (String -> IO ()) -> IO GameState
+main load save logMsg = do
+    s <- load
     g <- newStdGen
-    ((), (_, s')) <- runStateT runGame (g, s)
+    writeFile "SnakesLaddersGame/result.txt" ""
+    ((), (_, s')) <- runStateT (runGame logMsg) (g, s)
     playAgain <- getPlayAgain
-    case playAgain of
-        "y" -> v1 setupGame
-        _ -> return s'
+    if playAgain == "y" 
+        then main load save logMsg 
+        else save s' >> return s'
 
-setupGame :: IO GameState
-setupGame = do
+v1 :: IO GameState
+v1 = main loadGame (\_ -> do return ()) putStr
+
+loadGame :: IO GameState
+loadGame = do
     players <- getPlayer
     numberOfFaces <- readNumber "number of faces"
     let dice = Dice numberOfFaces
     let board = Board 20 snakeMap ladderMap
-    return (players, board, dice)
+    return $ GameState 0 players board dice
+
+v2 :: IO GameState
+v2 = main loadGame' saveGame $ putStr >> appendFile "SnakesLaddersGame/result.txt"
+
+loadGame' :: IO GameState
+loadGame' = do
+    jsonData <- B.readFile "SnakesLaddersGame/gameState.json"
+    let maybeGameState = decode jsonData :: Maybe GameState
+    case maybeGameState of
+        Just s -> return s
+        Nothing -> error "Error: Can't read or parse file"
+
+saveGame :: GameState -> IO ()
+saveGame s = writeFile "SnakesLaddersGame/gameStateResult.json" (encodeJSON' s)
+
+encodeJSON' :: ToJSON a => a -> String
+encodeJSON' = C.unpack . encodePretty
 
 getPlayAgain :: IO String
 getPlayAgain = putStr "Play again? (y/n) : " >> getLine
 
-runGame :: StateT (StdGen, GameState) IO ()
-runGame = do
-    (_, s@(playerOrder, _, _)) <- get
-    logGame <- runTurn
-    lift $ putStr logGame
+runGame :: (String -> IO ()) -> StateT (StdGen, GameState) IO ()
+runGame logMsg = do
+    turnMsg <- runTurn
+    lift $ logMsg turnMsg
+    (_, s) <- get
     let v = verdict s
     case v of
-        True -> lift $ putStrLn $ gameEndFormatString $ name $ tailQ $ players playerOrder
-        False -> runGame
+        True -> lift $ putStrLn $ gameEndFormatString $ name $ tailQ $ players (playerOrder s)
+        False -> runGame logMsg
 
 runTurn :: Monad m => StateT (StdGen, GameState) m String
 runTurn = do
-    (gen, (playerOrder, board, dice)) <- get
     step' <- rollDice
+    (gen, GameState turn playerOrder board dice) <- get
     let (player, playerOrder') = deq $ players playerOrder
     let (msg, position') = move step' (position player) board
     let player' = Player (pid player) position' (name player)
-    put (gen, (PlayerOrder $ enq playerOrder' player', board, dice))
-    return $ show (pid player') ++ show (name player') ++ msg
+    put (gen, GameState (turn + 1) (PlayerOrder $ enq playerOrder' player') board dice)
+    return $ "Player" ++ show (pid player') ++ "'s turn: " ++ show turn ++ " " ++ show (name player') ++ "\n" ++ msg
 
 readNumber :: [Char] -> IO Int
 readNumber msg = do
@@ -147,16 +179,13 @@ createPlayer n = do
 
 rollDice :: Monad m => StateT (StdGen, GameState) m Int
 rollDice = do
-    (gen, gameState@(_, _, dice)) <- get
-    (result, newGen) <- runStateT (uniformSt (1, numberOfFaces dice)) gen
-    put (newGen, gameState)
+    (gen, gameState@(GameState _ _ _ dice)) <- get
+    let (result, gen') = uniformR (1, numberOfFaces dice) gen
+    put (gen', gameState)
     return result
 
-uniformSt :: (RandomGen g, UniformRange a, Monad m) => (a, a) -> StateT g m a
-uniformSt range = state (uniformR range)
-
 verdict :: GameState -> Bool
-verdict (playerOrder, board, _) = size board <= (position $ tailQ $ players playerOrder)
+verdict (GameState _ playerOrder board _) = size board <= (position $ tailQ $ players playerOrder)
 
 move :: Int -> Position -> Board -> (String, Position)
 move step' position board =

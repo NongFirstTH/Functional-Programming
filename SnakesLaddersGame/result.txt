@@ -1,0 +1,93 @@
+Player1's turn: 0 "Alice"
+ current position 0 -> move 3 -> steps to 3 -> 3
+Player2's turn: 1 "Bob"
+ current position 0 -> move 6 -> steps to 6 -> 6
+Player1's turn: 2 "Alice"
+ current position 3 -> move 1 -> steps to 4 -> and climb the ladder to 14
+Player2's turn: 3 "Bob"
+ current position 6 -> move 5 -> steps to 11 -> 11
+Player1's turn: 4 "Alice"
+ current position 14 -> move 1 -> steps to 15 -> 15
+Player2's turn: 5 "Bob"
+ current position 11 -> move 2 -> steps to 13 -> 13
+Player1's turn: 6 "Alice"
+ current position 15 -> move 3 -> steps to 18 -> 18
+Player2's turn: 7 "Bob"
+ current position 13 -> move 3 -> steps to 16 -> but got eaten by snake fall to 6
+Player1's turn: 8 "Alice"
+ current position 18 -> move 1 -> steps to 19 -> 19
+Player2's turn: 9 "Bob"
+ current position 6 -> move 1 -> steps to 7 -> 7
+Player1's turn: 10 "Alice"
+ current position 19 -> move 4 -> steps to 23 -> 23
+Player2's turn: 11 "Bob"
+ current position 7 -> move 2 -> steps to 9 -> and climb the ladder to 31
+Player1's turn: 12 "Alice"
+ current position 23 -> move 4 -> steps to 27 -> 27
+Player2's turn: 13 "Bob"
+ current position 31 -> move 1 -> steps to 32 -> 32
+Player1's turn: 14 "Alice"
+ current position 27 -> move 6 -> steps to 33 -> 33
+Player2's turn: 15 "Bob"
+ current position 32 -> move 4 -> steps to 36 -> and climb the ladder to 44
+Player1's turn: 16 "Alice"
+ current position 33 -> move 6 -> steps to 39 -> 39
+Player2's turn: 17 "Bob"
+ current position 44 -> move 3 -> steps to 47 -> but got eaten by snake fall to 26
+Player1's turn: 18 "Alice"
+ current position 39 -> move 6 -> steps to 45 -> 45
+Player2's turn: 19 "Bob"
+ current position 26 -> move 6 -> steps to 32 -> 32
+Player1's turn: 20 "Alice"
+ current position 45 -> move 2 -> steps to 47 -> but got eaten by snake fall to 26
+Player2's turn: 21 "Bob"
+ current position 32 -> move 2 -> steps to 34 -> 34
+Player1's turn: 22 "Alice"
+ current position 26 -> move 3 -> steps to 29 -> 29
+Player2's turn: 23 "Bob"
+ current position 34 -> move 4 -> steps to 38 -> 38
+Player1's turn: 24 "Alice"
+ current position 29 -> move 6 -> steps to 35 -> 35
+Player2's turn: 25 "Bob"
+ current position 38 -> move 1 -> steps to 39 -> 39
+Player1's turn: 26 "Alice"
+ current position 35 -> move 1 -> steps to 36 -> and climb the ladder to 44
+Player2's turn: 27 "Bob"
+ current position 39 -> move 3 -> steps to 42 -> 42
+Player1's turn: 28 "Alice"
+ current position 44 -> move 1 -> steps to 45 -> 45
+Player2's turn: 29 "Bob"
+ current position 42 -> move 4 -> steps to 46 -> 46
+Player1's turn: 30 "Alice"
+ current position 45 -> move 1 -> steps to 46 -> 46
+Player2's turn: 31 "Bob"
+ current position 46 -> move 2 -> steps to 48 -> 48
+Player1's turn: 32 "Alice"
+ current position 46 -> move 5 -> steps to 51 -> and climb the ladder to 67
+Player2's turn: 33 "Bob"
+ current position 48 -> move 2 -> steps to 50 -> 50
+Player1's turn: 34 "Alice"
+ current position 67 -> move 6 -> steps to 73 -> 73
+Player2's turn: 35 "Bob"
+ current position 50 -> move 1 -> steps to 51 -> and climb the ladder to 67
+Player1's turn: 36 "Alice"
+ current position 73 -> move 4 -> steps to 77 -> 77
+Player2's turn: 37 "Bob"
+ current position 67 -> move 5 -> steps to 72 -> 72
+Player1's turn: 38 "Alice"
+ current position 77 -> move 5 -> steps to 82 -> 82
+Player2's turn: 39 "Bob"
+ current position 72 -> move 2 -> steps to 74 -> 74
+Player1's turn: 40 "Alice"
+ current position 82 -> move 1 -> steps to 83 -> 83
+Player2's turn: 41 "Bob"
+ current position 74 -> move 1 -> steps to 75 -> 75
+Player1's turn: 42 "Alice"
+ current position 83 -> move 1 -> steps to 84 -> 84
+Player2's turn: 43 "Bob"
+ current position 75 -> move 4 -> steps to 79 -> 79
+Player1's turn: 44 "Alice"
+ current position 84 -> move 2 -> steps to 86 -> 86
+Player2's turn: 45 "Bob"
+ current position 79 -> move 1 -> steps to 80 -> and climb the ladder to 100
+kuykuy
